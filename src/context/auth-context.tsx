@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { api } from "@/lib/api";
 import { User } from "@/types";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface AuthContextType {
   user: User | null;
@@ -21,6 +22,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   // On first load, if a token cookie exists, fetch the current user to restore session
   useEffect(() => {
@@ -44,9 +46,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const res = await api.post("/api/auth/login", { email, password });
     const { token, user: loggedInUser } = res.data.data;
 
-    // 7 days matches your backend's JWT_EXPIRES_IN
+
     Cookies.set("token", token, { expires: 7 });
+    queryClient.clear(); // wipe any previous user's cached data
     setUser(loggedInUser);
+
+    
 
     redirectByRole(loggedInUser.role);
   };
@@ -56,6 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { token, user: newUser } = res.data.data;
 
     Cookies.set("token", token, { expires: 7 });
+    queryClient.clear(); 
     setUser(newUser);
 
     redirectByRole(newUser.role);
@@ -63,6 +69,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     Cookies.remove("token");
+    queryClient.clear();
     setUser(null);
     router.push("/auth/login");
   };

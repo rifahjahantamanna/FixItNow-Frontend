@@ -32,6 +32,7 @@ export interface TechnicianProfile {
   experience: number;
   hourlyRate: string; // Prisma Decimal comes over JSON as a string
   user?: { id: string; name: string; email?: string };
+  services?: Service[];
 }
 
 export interface Service {

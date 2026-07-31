@@ -38,7 +38,7 @@ export function AddServiceDialog() {
   const { data: categories } = useCategories();
   const { mutate, isPending } = useCreateService();
 
-  const form = useForm<CreateServiceInput>({
+  const form = useForm({
     resolver: zodResolver(createServiceSchema),
     defaultValues: { title: "", description: "", price: 0, categoryId: "" },
     
@@ -103,7 +103,12 @@ export function AddServiceDialog() {
                 <FormItem>
                   <FormLabel>Price (৳)</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="800" {...field} />
+                    <Input
+          type="number"
+          placeholder="800"
+          {...field}
+          value={field.value === undefined ? "" : String(field.value)}
+        />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

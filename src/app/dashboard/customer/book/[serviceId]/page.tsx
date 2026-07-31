@@ -25,7 +25,7 @@ export default function BookServicePage() {
 
   const { mutate, isPending } = useCreateBooking(serviceId);
 
-  const form = useForm<CreateBookingInput>({
+  const form = useForm({
     resolver: zodResolver(createBookingSchema),
   });
 

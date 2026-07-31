@@ -35,7 +35,7 @@ export function ReviewDialog({ bookingId }: { bookingId: string }) {
   const [open, setOpen] = useState(false);
   const { mutate, isPending } = useCreateReview(bookingId);
 
-  const form = useForm<CreateReviewInput>({
+  const form = useForm({
     resolver: zodResolver(createReviewSchema),
     defaultValues: { comment: "" },
   });

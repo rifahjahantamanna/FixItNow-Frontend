@@ -60,3 +60,16 @@ export function useCreateCategory() {
     },
   });
 }
+export function useDeleteCategory() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (categoryId: string) => {
+      const res = await api.delete(`/api/admin/categories/${categoryId}`);
+      return res.data.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-categories"] });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+  });
+}

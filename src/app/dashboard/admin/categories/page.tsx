@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createCategorySchema, CreateCategoryInput } from "@/lib/validators/category.validator";
-import { useAdminCategories, useCreateCategory } from "@/lib/hooks/use-admin";
+import {
+  useAdminCategories,
+  useCreateCategory,
+  useDeleteCategory,
+} from "@/lib/hooks/use-admin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,6 +25,7 @@ import { toast } from "sonner";
 export default function AdminCategoriesPage() {
   const { data: categories, isLoading } = useAdminCategories();
   const { mutate, isPending } = useCreateCategory();
+  const { mutate: deleteCategory, isPending: isDeleting } = useDeleteCategory();
 
   const form = useForm({
     resolver: zodResolver(createCategorySchema),
@@ -37,6 +41,14 @@ export default function AdminCategoriesPage() {
       onError: (err: any) => {
         toast.error(err.response?.data?.message || "Failed to create category");
       },
+    });
+  };
+
+  const handleDelete = (categoryId: string) => {
+    deleteCategory(categoryId, {
+      onSuccess: () => toast.success("Category deleted"),
+      onError: (err: any) =>
+        toast.error(err.response?.data?.message || "Failed to delete category"),
     });
   };
 
@@ -80,11 +92,22 @@ export default function AdminCategoriesPage() {
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {categories.map((cat) => (
             <Card key={cat.id}>
-              <CardContent className="pt-6">
-                <p className="font-medium">{cat.name}</p>
-                {cat.description && (
-                  <p className="text-sm text-muted-foreground">{cat.description}</p>
-                )}
+              <CardContent className="flex items-start justify-between gap-2 pt-6">
+                <div>
+                  <p className="font-medium">{cat.name}</p>
+                  {cat.description && (
+                    <p className="text-sm text-muted-foreground">{cat.description}</p>
+                  )}
+                </div>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-destructive hover:text-destructive"
+                  disabled={isDeleting}
+                  onClick={() => handleDelete(cat.id)}
+                >
+                  ✕
+                </Button>
               </CardContent>
             </Card>
           ))}

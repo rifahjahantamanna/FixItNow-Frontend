@@ -16,7 +16,8 @@ export function Navbar() {
       : "/dashboard/customer";
 
   return (
-    <header className="border-b bg-background">
+    <header className="border-b bg-card shadow-sm">
+    
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link href="/">
           <Logo />

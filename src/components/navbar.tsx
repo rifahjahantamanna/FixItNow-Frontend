@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useAuth } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/logo";
 
 export function Navbar() {
   const { user, logout, isLoading } = useAuth();
@@ -17,8 +18,8 @@ export function Navbar() {
   return (
     <header className="border-b bg-background">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link href="/" className="text-xl font-bold">
-          FixItNow
+        <Link href="/">
+          <Logo />
         </Link>
 
         <nav className="flex items-center gap-4">

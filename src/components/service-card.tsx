@@ -24,7 +24,9 @@ export function ServiceCard({ service }: { service: Service }) {
           )}
         </CardContent>
         <CardFooter>
-          <p className="text-lg font-semibold">৳{Number(service.price).toFixed(0)}</p>
+          <p className="font-[family-name:var(--font-mono)] text-lg font-semibold text-primary">
+            ৳{Number(service.price).toFixed(0)}
+          </p>
         </CardFooter>
       </Card>
     </Link>

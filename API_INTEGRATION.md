@@ -2,7 +2,7 @@
 
 This document maps every frontend component/page to the backend endpoint(s) it consumes.
 
-**Backend API base URL:** `https://fixitnow-mcum.onrender.com`
+**Backend API base URL:** *https://fixitnow-mcum.onrender.com*
 **Backend repo:** *https://github.com/rifahjahantamanna/FixItNow.git*
 ---
 

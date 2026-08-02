@@ -9,7 +9,7 @@ The frontend for FixItNow, a home services marketplace where customers browse an
 
 | Item | Link |
 |------|------|
-| **Live Frontend** | https://fixitnow-frontend-4t99erm7m-rifah1119-4922s-projects.vercel.app |
+| **Live Frontend** | https://fixitnow-rifah.vercel.app |
 | **Backend API** | https://fixitnow-mcum.onrender.com |
 | **Backend Repo** | *(add your backend repo URL here)* |
 | **Frontend GitHub Repo** | *(add your frontend repo URL here)* |

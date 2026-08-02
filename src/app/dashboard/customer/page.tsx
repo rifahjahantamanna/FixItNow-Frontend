@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { useMyBookings } from "@/lib/hooks/use-bookings";
 import { useMyPayments } from "@/lib/hooks/use-payments";
@@ -9,7 +8,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ReviewDialog } from "@/components/review-dialog";
 import {
   Table,
   TableBody,
@@ -18,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
+import { ReviewDialog } from "@/components/review-dialog";
 import { useAuth } from "@/context/auth-context";
 
 export default function CustomerDashboardPage() {
@@ -28,7 +26,9 @@ export default function CustomerDashboardPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-8">
-      <h1 className="mb-2 text-3xl font-bold">Welcome, {user?.name}</h1>
+      <h1 className="mb-2 font-[family-name:var(--font-display)] text-3xl font-bold">
+        Welcome, {user?.name}
+      </h1>
       <p className="mb-8 text-muted-foreground">Manage your bookings and payments.</p>
 
       <Tabs defaultValue="bookings">
@@ -48,7 +48,11 @@ export default function CustomerDashboardPage() {
 
           {bookings && bookings.length === 0 && (
             <p className="text-muted-foreground">
-              No bookings yet. <Link href="/services" className="underline">Browse services</Link> to get started.
+              No bookings yet.{" "}
+              <Link href="/services" className="underline">
+                Browse services
+              </Link>{" "}
+              to get started.
             </p>
           )}
 
@@ -95,28 +99,30 @@ export default function CustomerDashboardPage() {
           )}
 
           {payments && payments.length > 0 && (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Method</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Date</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {payments.map((payment) => (
-                  <TableRow key={payment.id}>
-                    <TableCell>৳{Number(payment.amount).toFixed(0)}</TableCell>
-                    <TableCell>{payment.method || "—"}</TableCell>
-                    <TableCell>{payment.status}</TableCell>
-                    <TableCell>
-                      {payment.paidAt ? new Date(payment.paidAt).toLocaleDateString() : "—"}
-                    </TableCell>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Method</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Date</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {payments.map((payment) => (
+                    <TableRow key={payment.id}>
+                      <TableCell>৳{Number(payment.amount).toFixed(0)}</TableCell>
+                      <TableCell>{payment.method || "—"}</TableCell>
+                      <TableCell>{payment.status}</TableCell>
+                      <TableCell>
+                        {payment.paidAt ? new Date(payment.paidAt).toLocaleDateString() : "—"}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
         </TabsContent>
       </Tabs>

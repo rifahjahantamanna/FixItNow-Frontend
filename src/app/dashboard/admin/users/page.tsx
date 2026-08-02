@@ -30,50 +30,54 @@ export default function AdminUsersPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-8">
-      <h1 className="mb-6 text-3xl font-bold">Manage Users</h1>
+      <h1 className="mb-6 font-[family-name:var(--font-display)] text-3xl font-bold">
+        Manage Users
+      </h1>
 
       {isLoading && <Skeleton className="h-96 w-full rounded-lg" />}
 
       {users && (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {users.map((u) => (
-              <TableRow key={u.id}>
-                <TableCell className="font-medium">{u.name}</TableCell>
-                <TableCell>{u.email}</TableCell>
-                <TableCell>
-                  <Badge variant="secondary">{u.role}</Badge>
-                </TableCell>
-                <TableCell>
-                  <Badge variant={u.isBanned ? "destructive" : "outline"}>
-                    {u.isBanned ? "Banned" : "Active"}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-right">
-                  {u.role !== "ADMIN" && (
-                    <Button
-                      size="sm"
-                      variant={u.isBanned ? "outline" : "destructive"}
-                      disabled={isPending}
-                      onClick={() => handleToggleBan(u.id, !!u.isBanned)}
-                    >
-                      {u.isBanned ? "Unban" : "Ban"}
-                    </Button>
-                  )}
-                </TableCell>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Role</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Action</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {users.map((u) => (
+                <TableRow key={u.id}>
+                  <TableCell className="font-medium">{u.name}</TableCell>
+                  <TableCell>{u.email}</TableCell>
+                  <TableCell>
+                    <Badge variant="secondary">{u.role}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={u.isBanned ? "destructive" : "outline"}>
+                      {u.isBanned ? "Banned" : "Active"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {u.role !== "ADMIN" && (
+                      <Button
+                        size="sm"
+                        variant={u.isBanned ? "outline" : "destructive"}
+                        disabled={isPending}
+                        onClick={() => handleToggleBan(u.id, !!u.isBanned)}
+                      >
+                        {u.isBanned ? "Unban" : "Ban"}
+                      </Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       )}
     </main>
   );

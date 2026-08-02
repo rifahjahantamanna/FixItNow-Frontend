@@ -11,9 +11,9 @@ The frontend for FixItNow, a home services marketplace where customers browse an
 |------|------|
 | **Live Frontend** | https://fixitnow-rifah.vercel.app |
 | **Backend API** | https://fixitnow-mcum.onrender.com |
-| **Backend Repo** | *(add your backend repo URL here)* |
-| **Frontend GitHub Repo** | *(add your frontend repo URL here)* |
-| **Demo Video** | *(add your video URL here)* |
+| **Backend Repo** | https://github.com/rifahjahantamanna/FixItNow.git |
+| **Frontend GitHub Repo** | https://github.com/rifahjahantamanna/FixItNow-Frontend.git |
+| **Demo Video** | link |
 | **API Integration Map** | [API_INTEGRATION.md](./API_INTEGRATION.md) |
 
 > ⚠️ **Note:** The backend is deployed on Render's free tier, which spins down after ~15 minutes of inactivity. The first request after idle time may take 30–60 seconds while it wakes up.

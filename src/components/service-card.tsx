@@ -1,12 +1,23 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Service } from "@/types";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { getCategoryImage } from "@/lib/category-images";
 
 export function ServiceCard({ service }: { service: Service }) {
   return (
     <Link href={`/technicians/${service.technicianProfileId}`}>
-      <Card className="h-full transition-shadow hover:shadow-md">
+      <Card className="h-full overflow-hidden transition-shadow hover:shadow-md">
+        <div className="relative h-40 w-full">
+          <Image
+            src={getCategoryImage(service.category?.name)}
+            alt={service.category?.name ?? service.title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
+        </div>
         <CardHeader>
           <div className="flex items-start justify-between gap-2">
             <CardTitle className="text-lg">{service.title}</CardTitle>

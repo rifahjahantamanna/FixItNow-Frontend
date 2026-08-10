@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { User, LayoutDashboard, LogOut } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function Navbar() {
   const { user, logout, isLoading } = useAuth();
@@ -54,6 +55,8 @@ export function Navbar() {
           <Link href="/contact" className="hidden text-sm font-medium text-muted-foreground hover:text-foreground sm:block">
             Contact
           </Link>
+          <ThemeToggle />
+
 
           {isLoading ? null : user ? (
             <DropdownMenu>

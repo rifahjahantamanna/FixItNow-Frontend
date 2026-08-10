@@ -5,6 +5,7 @@ import { QueryProvider } from "@/providers/query-provider";
 import { AuthProvider } from "@/context/auth-context";
 import { Toaster } from "@/components/ui/sonner";
 import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -35,11 +36,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${fraunces.variable} ${inter.variable} ${jetbrainsMono.variable} font-sans`}>
+      <body className={`${fraunces.variable} ${inter.variable} ${jetbrainsMono.variable} flex min-h-screen flex-col font-sans`}>
         <QueryProvider>
           <AuthProvider>
             <Navbar />
-            {children}
+            <div className="flex-1">{children}</div>
+            <Footer />
             <Toaster richColors position="top-center" />
           </AuthProvider>
         </QueryProvider>

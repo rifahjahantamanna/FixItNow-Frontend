@@ -14,11 +14,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Search, Calendar, Wrench, ShieldCheck, Users, Star } from "lucide-react";
+import { useAuth } from "@/context/auth-context";
 
 export default function HomePage() {
   const { data, isLoading, isError } = useServices({ limit: 6 } as any);
   const { data: categories } = useCategories();
   const { data: techData } = useTechnicians({ page: 1 });
+  const { user } = useAuth();
 
   return (
     <main>
@@ -219,19 +221,43 @@ export default function HomePage() {
         </section>
 
         {/* 8. CTA */}
-        <section className="border-t py-16 text-center">
-          <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold sm:text-3xl">
-            Ready to get started?
-          </h2>
-          <p className="mx-auto mt-3 max-w-md text-muted-foreground">
-            Join FixItNow today as a customer or technician and experience trusted home services.
-          </p>
-          <Link href="/auth/register">
-            <Button size="lg" className="mt-6">
-              Create an Account
-            </Button>
-          </Link>
-        </section>
+{user ? (
+  <section className="border-t py-16 text-center">
+    <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold sm:text-3xl">
+      Welcome back, {user.name}
+    </h2>
+    <p className="mx-auto mt-3 max-w-md text-muted-foreground">
+      Jump back into your dashboard to manage your bookings.
+    </p>
+    <Link
+      href={
+        user.role === "ADMIN"
+          ? "/dashboard/admin"
+          : user.role === "TECHNICIAN"
+          ? "/dashboard/technician"
+          : "/dashboard/customer"
+      }
+    >
+      <Button size="lg" className="mt-6">
+        Go to Dashboard
+      </Button>
+    </Link>
+  </section>
+) : (
+  <section className="border-t py-16 text-center">
+    <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold sm:text-3xl">
+      Ready to get started?
+    </h2>
+    <p className="mx-auto mt-3 max-w-md text-muted-foreground">
+      Join FixItNow today as a customer or technician and experience trusted home services.
+    </p>
+    <Link href="/auth/register">
+      <Button size="lg" className="mt-6">
+        Create an Account
+      </Button>
+    </Link>
+  </section>
+)}
       </div>
     </main>
   );

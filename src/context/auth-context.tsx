@@ -14,6 +14,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (data: { name: string; email: string; password: string; role: string }) => Promise<void>;
   logout: () => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,7 +25,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  // On first load, if a token cookie exists, fetch the current user to restore session
   useEffect(() => {
     const token = Cookies.get("token");
     if (!token) {
@@ -42,29 +42,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .finally(() => setIsLoading(false));
   }, []);
 
+  const refreshUser = async () => {
+    const res = await api.get("/api/auth/me");
+    setUser(res.data.data);
+  };
+
   const login = async (email: string, password: string) => {
-    const res = await api.post("/api/auth/login", { email, password });
-    const { token, user: loggedInUser } = res.data.data;
+    try {
+      const res = await api.post("/api/auth/login", { email, password });
+      const { token, user: loggedInUser } = res.data.data;
 
-
-    Cookies.set("token", token, { expires: 7 });
-    queryClient.clear(); // wipe any previous user's cached data
-    setUser(loggedInUser);
-
-    
-
-    redirectByRole(loggedInUser.role);
+      Cookies.set("token", token, { expires: 7 });
+      queryClient.clear();
+      setUser(loggedInUser);
+      redirectByRole(loggedInUser.role);
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message ?? "Login failed");
+      throw err;
+    }
   };
 
   const register = async (data: { name: string; email: string; password: string; role: string }) => {
-    const res = await api.post("/api/auth/register", data);
-    const { token, user: newUser } = res.data.data;
+    try {
+      const res = await api.post("/api/auth/register", data);
+      const { token, user: newUser } = res.data.data;
 
-    Cookies.set("token", token, { expires: 7 });
-    queryClient.clear(); 
-    setUser(newUser);
-
-    redirectByRole(newUser.role);
+      Cookies.set("token", token, { expires: 7 });
+      queryClient.clear();
+      setUser(newUser);
+      redirectByRole(newUser.role);
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message ?? "Registration failed");
+      throw err;
+    }
   };
 
   const logout = () => {
@@ -81,7 +91,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, register, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

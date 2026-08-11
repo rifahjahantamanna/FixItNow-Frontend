@@ -15,9 +15,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { useState } from "react";
 import Link from "next/link";
+
+const demoAccounts = [
+  { label: "Demo Customer", email: "customer1@test.com", password: "test123" },
+  { label: "Demo Technician", email: "tech1@fixitnow.com", password: "Tech@123" },
+  { label: "Demo Admin", email: "admin@fixitnow.com", password: "Admin@123" },
+];
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -28,10 +35,10 @@ export default function LoginPage() {
     defaultValues: { email: "", password: "" },
   });
 
-  const onSubmit = async (data: LoginInput) => {
+  const doLogin = async (email: string, password: string) => {
     setIsSubmitting(true);
     try {
-      await login(data.email, data.password);
+      await login(email, password);
       toast.success("Logged in successfully!");
     } catch (err: any) {
       const message = err.response?.data?.message || "Login failed";
@@ -41,8 +48,15 @@ export default function LoginPage() {
     }
   };
 
+  const onSubmit = (data: LoginInput) => doLogin(data.email, data.password);
+
+  const fillDemo = (email: string, password: string) => {
+    form.setValue("email", email);
+    form.setValue("password", password);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
+    <div className="flex min-h-[70vh] items-center justify-center bg-muted/40 px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">Welcome back</CardTitle>
@@ -84,7 +98,27 @@ export default function LoginPage() {
             </form>
           </Form>
 
-          <p className="mt-4 text-center text-sm text-muted-foreground">
+          <Separator className="my-6" />
+
+          <p className="mb-3 text-center text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Quick Demo Access
+          </p>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            {demoAccounts.map((acc) => (
+              <Button
+                key={acc.email}
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={isSubmitting}
+                onClick={() => doLogin(acc.email, acc.password)}
+              >
+                {acc.label}
+              </Button>
+            ))}
+          </div>
+
+          <p className="mt-6 text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
             <Link href="/auth/register" className="underline underline-offset-4">
               Register

@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/accordion";
 import { Search, Calendar, Wrench, ShieldCheck, Users, Star } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
+import { getCategoryVisual } from "@/lib/category-images";
 
 export default function HomePage() {
   const { data, isLoading, isError } = useServices({ limit: 6 } as any);
@@ -98,9 +99,12 @@ export default function HomePage() {
                 <Link key={cat.id} href={`/services?categoryId=${cat.id}`}>
                   <Card className="h-full transition-shadow hover:shadow-md">
                     <CardContent className="flex flex-col items-center justify-center gap-2 py-8 text-center">
-                      <Wrench className="h-6 w-6 text-accent" />
-                      <p className="font-medium">{cat.name}</p>
-                    </CardContent>
+  {(() => {
+    const { icon: Icon } = getCategoryVisual(cat.name);
+    return <Icon className="h-6 w-6 text-accent" />;
+  })()}
+  <p className="font-medium">{cat.name}</p>
+</CardContent>
                   </Card>
                 </Link>
               ))}

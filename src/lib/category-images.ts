@@ -1,17 +1,18 @@
-// Maps category names to a representative image.
-// Using Unsplash's source API with fixed seeds so each category always gets the same image.
-const categoryImageMap: Record<string, string> = {
-  Plumbing: "https://images.unsplash.com/photo-1607472829122-7efe1e2e3a52?w=600&h=400&fit=crop",
-  Electrical: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&h=400&fit=crop",
-  Cleaning: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&h=400&fit=crop",
-  Painting: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=600&h=400&fit=crop",
-  Gardening: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&h=400&fit=crop",
+import { Droplet, Zap, Sparkles, Paintbrush, Flower2, Wrench } from "lucide-react";
+
+export const categoryVisuals: Record<string, { icon: typeof Wrench; gradient: string }> = {
+  Plumbing: { icon: Droplet, gradient: "from-blue-600 to-blue-800" },
+  Electrical: { icon: Zap, gradient: "from-amber-500 to-orange-700" },
+  Cleaning: { icon: Sparkles, gradient: "from-cyan-500 to-teal-700" },
+  Painting: { icon: Paintbrush, gradient: "from-rose-500 to-red-700" },
+  Gardening: { icon: Flower2, gradient: "from-green-500 to-emerald-700" },
 };
 
-const fallbackImage =
-  "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&h=400&fit=crop";
-
-export function getCategoryImage(categoryName?: string): string {
-  if (!categoryName) return fallbackImage;
-  return categoryImageMap[categoryName] ?? fallbackImage;
+export function getCategoryVisual(categoryName?: string) {
+  return (
+    (categoryName && categoryVisuals[categoryName]) || {
+      icon: Wrench,
+      gradient: "from-slate-600 to-slate-800",
+    }
+  );
 }

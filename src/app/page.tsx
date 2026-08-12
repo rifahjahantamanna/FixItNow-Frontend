@@ -7,15 +7,18 @@ import { TestimonialsSection } from "@/components/testimonials-section";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Search, Calendar, Wrench, ShieldCheck, Users, Star } from "lucide-react";
+import { Calendar, Wrench, ShieldCheck, Users, Star, Search } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { getCategoryVisual } from "@/lib/category-images";
+
+const ROTATING_WORDS = ["Plumbing", "Electrical", "Cleaning", "Painting"];
 
 export default function HomePage() {
   const { data, isLoading, isError } = useServices({ limit: 6 } as any);
@@ -23,10 +26,19 @@ export default function HomePage() {
   const { data: techData } = useTechnicians({ page: 1 });
   const { user } = useAuth();
 
+  const [wordIndex, setWordIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex((i) => (i + 1) % ROTATING_WORDS.length);
+    }, 2200);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <main>
       {/* 1. Hero */}
-      <section className="relative overflow-hidden border-b bg-primary px-6 py-20 text-center">
+      <section className="relative overflow-hidden border-b bg-primary px-6 py-24 text-center">
         <div
           className="absolute inset-0 opacity-[0.07]"
           style={{
@@ -37,23 +49,51 @@ export default function HomePage() {
         />
         <div className="relative">
           <h1 className="font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-primary-foreground sm:text-5xl">
-            Trusted Home Services,{" "}
-            <span className="text-accent">One Click Away</span>
+            Trusted{" "}
+            <span
+              key={wordIndex}
+              className="inline-block min-w-[8ch] text-accent transition-all duration-500 animate-in fade-in slide-in-from-bottom-2"
+            >
+              {ROTATING_WORDS[wordIndex]}
+            </span>{" "}
+            Services
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-lg text-primary-foreground/80">
-            Book vetted technicians for plumbing, electrical, cleaning, and more.
+            Book vetted technicians for plumbing, electrical, cleaning, and more — one click away.
           </p>
           <Link href="/services">
             <Button size="lg" className="mt-6 bg-accent text-accent-foreground hover:bg-accent/90">
               Browse Services
             </Button>
           </Link>
+
+          <div className="mt-14 flex justify-center">
+            
+            <a href="#how-it-works"
+              className="flex flex-col items-center gap-1 text-primary-foreground/60 transition-colors hover:text-primary-foreground"
+            >
+              <span className="text-xs uppercase tracking-widest">Explore</span>
+              <svg
+                className="h-5 w-5 animate-bounce"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                />
+              </svg>
+            </a>
+          </div>
         </div>
       </section>
 
       <div className="mx-auto max-w-6xl px-4">
         {/* 2. How It Works */}
-        <section className="py-16">
+        <section id="how-it-works" className="py-16">
           <h2 className="mb-10 text-center font-[family-name:var(--font-display)] text-2xl font-semibold sm:text-3xl">
             How It Works
           </h2>
@@ -95,19 +135,19 @@ export default function HomePage() {
               Browse by Category
             </h2>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-              {categories.map((cat) => (
-                <Link key={cat.id} href={`/services?categoryId=${cat.id}`}>
-                  <Card className="h-full transition-shadow hover:shadow-md">
-                    <CardContent className="flex flex-col items-center justify-center gap-2 py-8 text-center">
-  {(() => {
-    const { icon: Icon } = getCategoryVisual(cat.name);
-    return <Icon className="h-6 w-6 text-accent" />;
-  })()}
-  <p className="font-medium">{cat.name}</p>
-</CardContent>
-                  </Card>
-                </Link>
-              ))}
+              {categories.map((cat) => {
+                const { icon: Icon } = getCategoryVisual(cat.name);
+                return (
+                  <Link key={cat.id} href={`/services?categoryId=${cat.id}`}>
+                    <Card className="h-full transition-shadow hover:shadow-md">
+                      <CardContent className="flex flex-col items-center justify-center gap-2 py-8 text-center">
+                        <Icon className="h-6 w-6 text-accent" />
+                        <p className="font-medium">{cat.name}</p>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                );
+              })}
             </div>
           </section>
         )}
@@ -225,43 +265,43 @@ export default function HomePage() {
         </section>
 
         {/* 8. CTA */}
-{user ? (
-  <section className="border-t py-16 text-center">
-    <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold sm:text-3xl">
-      Welcome back, {user.name}
-    </h2>
-    <p className="mx-auto mt-3 max-w-md text-muted-foreground">
-      Jump back into your dashboard to manage your bookings.
-    </p>
-    <Link
-      href={
-        user.role === "ADMIN"
-          ? "/dashboard/admin"
-          : user.role === "TECHNICIAN"
-          ? "/dashboard/technician"
-          : "/dashboard/customer"
-      }
-    >
-      <Button size="lg" className="mt-6">
-        Go to Dashboard
-      </Button>
-    </Link>
-  </section>
-) : (
-  <section className="border-t py-16 text-center">
-    <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold sm:text-3xl">
-      Ready to get started?
-    </h2>
-    <p className="mx-auto mt-3 max-w-md text-muted-foreground">
-      Join FixItNow today as a customer or technician and experience trusted home services.
-    </p>
-    <Link href="/auth/register">
-      <Button size="lg" className="mt-6">
-        Create an Account
-      </Button>
-    </Link>
-  </section>
-)}
+        {user ? (
+          <section className="border-t py-16 text-center">
+            <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold sm:text-3xl">
+              Welcome back, {user.name}
+            </h2>
+            <p className="mx-auto mt-3 max-w-md text-muted-foreground">
+              Jump back into your dashboard to manage your bookings.
+            </p>
+            <Link
+              href={
+                user.role === "ADMIN"
+                  ? "/dashboard/admin"
+                  : user.role === "TECHNICIAN"
+                  ? "/dashboard/technician"
+                  : "/dashboard/customer"
+              }
+            >
+              <Button size="lg" className="mt-6">
+                Go to Dashboard
+              </Button>
+            </Link>
+          </section>
+        ) : (
+          <section className="border-t py-16 text-center">
+            <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold sm:text-3xl">
+              Ready to get started?
+            </h2>
+            <p className="mx-auto mt-3 max-w-md text-muted-foreground">
+              Join FixItNow today as a customer or technician and experience trusted home services.
+            </p>
+            <Link href="/auth/register">
+              <Button size="lg" className="mt-6">
+                Create an Account
+              </Button>
+            </Link>
+          </section>
+        )}
       </div>
     </main>
   );
